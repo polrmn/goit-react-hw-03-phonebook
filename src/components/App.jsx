@@ -1,22 +1,31 @@
 import { nanoid } from "nanoid";
 import { Component } from "react";
-import AddNewContact from './AddNewContact/AddNewContact'
+import AddNewContact from './AddNewContact/AddNewContact';
 import FilterContacts from "./FilterContacts/FilterContacts";
 import ContactsList from "./ContactsList/ContactsList";
+import { Title } from "./App.styled";
 
 export class App extends Component {
   
-  
-
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+  
+  componentDidMount() {
+    const contacsFromLS = JSON.parse(localStorage.getItem('userContacts'));
+    if (contacsFromLS) {
+      this.setState({ contacts: contacsFromLS });
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.state.contacts.length !== 0){
+      localStorage.setItem('userContacts', JSON.stringify(this.state.contacts));
+      return
+    }
+      localStorage.removeItem('userContacts'); 
+  }
 
   handleFormSubmit = ({name, number}) => {
     const alreadyInContacts = this.state.contacts.find(contact=>contact.name===name)
@@ -52,17 +61,19 @@ export class App extends Component {
     return (
       <>
         <AddNewContact onFormSubmit={this.handleFormSubmit} />
-        {this.state.contacts.length > 0 && <h1>Contacts</h1>}
+        {this.state.contacts.length > 0 && <Title>Contacts</Title>}
         {this.state.contacts.length > 1 && (
           <FilterContacts
             onInputChange={this.handleFilterInputChange}
             value={this.state.filter}
           />
         )}
-        <ContactsList
-          filterContacts={this.filterContacts()}
-          onDeleteBtnClick={this.handleDeleteBtnClick}
-        />
+        {this.filterContacts().length > 0 && (
+          <ContactsList
+            filterContacts={this.filterContacts()}
+            onDeleteBtnClick={this.handleDeleteBtnClick}
+          />
+        )}
       </>
     );
   }

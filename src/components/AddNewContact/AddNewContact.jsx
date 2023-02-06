@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Component } from 'react';
+import { Form, Input, Button } from './AddNewContact.styled';
 
 export default class AddNewContact extends Component {
   nameInputId = nanoid();
@@ -24,9 +25,9 @@ export default class AddNewContact extends Component {
 
   render() {
     return (
-      <form onSubmit={this.formSubmitHeandler}>
+      <Form onSubmit={this.formSubmitHeandler}>
         <label htmlFor={this.nameInputId}>Name</label>
-        <input
+        <Input
           onChange={this.handleInputChange}
           value={this.state.name}
           id={this.nameInputId}
@@ -37,7 +38,7 @@ export default class AddNewContact extends Component {
           required
         />
         <label htmlFor={this.numberInputId}>Number</label>
-        <input
+        <Input
           onChange={this.handleInputChange}
           value={this.state.number}
           id={this.numberInputId}
@@ -48,8 +49,8 @@ export default class AddNewContact extends Component {
           required
         />
 
-        <button type="submit">Add contact</button>
-      </form>
+        <Button type="submit">Add contact</Button>
+      </Form>
     );
   }
 }
